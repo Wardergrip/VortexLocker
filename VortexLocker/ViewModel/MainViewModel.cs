@@ -11,5 +11,10 @@ namespace VortexLocker.ViewModel
         {
 
         }
+
+        public string GitUsername 
+        { 
+            get { return Utils.CmdHelper.GetGitUsername(); } 
+        }
     }
 }

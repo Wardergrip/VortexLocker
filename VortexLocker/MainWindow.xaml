@@ -11,6 +11,6 @@
         <vm:MainViewModel/>
     </Window.DataContext>
     <Grid>
-        
+        <Label Content="{Binding GitUsername}"/>
     </Grid>
 </Window>
