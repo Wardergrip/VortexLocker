@@ -9,8 +9,11 @@
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="Repository\" />
-    <Folder Include="ViewModel\" />
     <Folder Include="View\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
   </ItemGroup>
 
 </Project>
