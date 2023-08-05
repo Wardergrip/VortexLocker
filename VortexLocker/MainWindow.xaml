@@ -6,11 +6,13 @@
         xmlns:local="clr-namespace:VortexLocker"
         xmlns:vm="clr-namespace:VortexLocker.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="VortexLocker" Height="450" Width="800" 
+        Background="#121212" Foreground="White"
+        >
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
     <Grid>
-        <Label Content="{Binding GitUsername}"/>
+        <Label Content="{Binding GitUsername}" Foreground="White"/>
     </Grid>
 </Window>
