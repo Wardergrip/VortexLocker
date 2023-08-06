@@ -14,5 +14,7 @@
     </Window.DataContext>
     <Grid>
         <Label Content="{Binding GitUsername}" Foreground="White"/>
+        <TreeView ItemsSource="{Binding Directories}">
+        </TreeView>
     </Grid>
 </Window>
