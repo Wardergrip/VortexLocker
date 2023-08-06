@@ -33,5 +33,45 @@ namespace VortexLocker.Utils
         {
             return Run("git", "config user.name");
         }
+
+        public static string LockCommit(List<string> filesToLock, bool mentionFilesInCommitDesc = true)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[VORTEXLOCKER] Automated commit\n\n");
+            if (mentionFilesInCommitDesc)
+            {
+                foreach (var file in filesToLock)
+                {
+                    sb.Append(file);
+                    sb.Append("\n");
+                }
+            }
+            return Run("git", $"commit -m [VORTEX] Locking files -m {sb.ToString()}");
+        }
+
+        public static string UnlockCommit(List<string> filesToUnlock, bool mentionFilesInCommitDesc = true)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[VORTEXLOCKER] Automated commit\n\n");
+            if (mentionFilesInCommitDesc)
+            {
+                foreach (var file in filesToUnlock)
+                {
+                    sb.Append(file);
+                    sb.Append("\n");
+                }
+            }
+            return Run("git", $"commit -m [VORTEX] Unlocking files -m {sb.ToString()}");
+        }
+
+        public static string Stagechange(string filePath)
+        {
+            return Run("git", $"add {filePath}");
+        }
+        
+        public static string Unstagechange(string filePath)
+        {
+            return Run("git", $"restore --stage {filePath}");
+        }
     }
 }
