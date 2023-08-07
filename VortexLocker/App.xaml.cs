@@ -14,6 +14,7 @@ namespace VortexLocker
     public partial class App : Application
     {
         public static readonly string FileExtension = ".vortex";
+        public static string FileArg { get; private set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -27,10 +28,12 @@ namespace VortexLocker
                     MessageBox.Show($"This fileformat is not supported. Supported extensions: {FileExtension}");
                     throw new Exception($"This fileformat is not supported. Supported extensions: {FileExtension}");
                 }
+                FileArg = filePath;
             }
             else
             {
-                // Normal application startup without a file
+                // Would be nice if this path is the previously loaded path.
+                FileArg = "./";
             }
         }
     }
