@@ -14,12 +14,35 @@ namespace VortexLocker.Utils
             RootDirectory = directory;
         }
 
-        public List<string> GetAllDirectories()
+        public static string GetRelativePath(string basePath, string absolutePath)
+        {
+            // Example:
+            // string basePath = @"C:\MyProjects\";
+            // string absolutePath = @"C:\MyProjects\Subfolder\file.txt";
+            // Relative = @"Subfolder\file.txt"
+            Uri baseUri = new Uri(basePath);
+            Uri absoluteUri = new Uri(absolutePath);
+
+            return Uri.UnescapeDataString(baseUri.MakeRelativeUri(absoluteUri).ToString());
+        }
+
+        public List<string> GetAllAbsoluteDirectories()
         {
             List<string> directories = new List<string>();
+            directories.Add(RootDirectory);
             // https://www.tutorialspoint.com/how-to-get-all-the-directories-and-sub-directories-inside-a-path-in-chash#:~:text=To%20get%20the%20directories%20C%23,directory%2C%20and%20optionally%20searches%20subdirectories.
             directories.AddRange(Directory.GetDirectories(RootDirectory, "*", SearchOption.AllDirectories));
 
+            return directories;
+        }
+
+        public List<string> GetAllRelativeDirectories()
+        {
+            List<string> directories = GetAllAbsoluteDirectories();
+            for (int i = 0; i < directories.Count; ++i)
+            {
+                directories[i] = GetRelativePath(RootDirectory, directories[i]);
+            }
             return directories;
         }
 
@@ -34,7 +57,7 @@ namespace VortexLocker.Utils
 
         public List<string> GetAllFiles()
         {
-            List<string> directories = GetAllDirectories();
+            List<string> directories = GetAllAbsoluteDirectories();
             List<string> files = new List<string>();
             foreach (var dir in directories)
             {
