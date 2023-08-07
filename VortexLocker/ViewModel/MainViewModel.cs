@@ -13,7 +13,7 @@ namespace VortexLocker.ViewModel
 
         public MainViewModel()
         {
-
+            //LockLogger.Init("");
         }
 
         public string GitUsername 
