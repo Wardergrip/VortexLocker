@@ -6,15 +6,26 @@
         xmlns:local="clr-namespace:VortexLocker"
         xmlns:vm="clr-namespace:VortexLocker.ViewModel"
         mc:Ignorable="d"
-        Title="VortexLocker" Height="450" Width="800" 
+        Title="{Binding WindowTitle}" Height="450" Width="800" 
         Background="#121212" Foreground="White"
         >
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
     <Grid>
-        <Label Content="{Binding GitUsername}" Foreground="White"/>
-        <TreeView ItemsSource="{Binding Directories}">
-        </TreeView>
+        <TabControl Background="#121212" Foreground="White" >
+            <TabItem Header="Overview">
+                <Frame Content="{Binding OverviewPage}" NavigationUIVisibility="Hidden" />
+            </TabItem>
+            <TabItem Header="Settings">
+                <Label Foreground="White" Content="Settings come here"/>
+            </TabItem>
+            <TabItem Header="About">
+                <TextBlock Margin="10">
+                    <TextBlock Text="Github repos: " Foreground="White"/>
+                    <Hyperlink Command="{Binding OpenGithubReposCommand}" Foreground="LightBlue">Click here</Hyperlink>
+                </TextBlock>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
