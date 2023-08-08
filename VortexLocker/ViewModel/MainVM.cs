@@ -9,7 +9,6 @@ namespace VortexLocker.ViewModel
 {
     public class MainVM : ObservableObject
     {
-        // This needs to be stored in a file and be configured from within.
         private FileManager _fileManager;
 
         public RelayCommand OpenGithubReposCommand { get; private set; }
@@ -20,10 +19,20 @@ namespace VortexLocker.ViewModel
         {
             WindowTitle = $"VortexLocker v0.1 | User: {GitUsername}";
             OpenGithubReposCommand = new RelayCommand(OpenGithubRepos);
-            _fileManager = new FileManager(App.FileArg);
-            //LockLogger.Init(App.FileArg);
+
+            if (App.FileArg != null)
+            {
+                Init(App.FileArg);
+            }
         }
 
+        public void Init(string filePath, bool initLockLogger = true)
+        {
+            _fileManager = new FileManager(filePath);
+            if (!initLockLogger) return;
+            LockLogger.Init(filePath);
+        }
+        
         public string GitUsername 
         { 
             get { return CmdHelper.GetGitUsername(); } 
@@ -31,7 +40,11 @@ namespace VortexLocker.ViewModel
 
         public List<string> Directories
         {
-            get { return _fileManager.GetAllAbsoluteDirectories(); }
+            get 
+            {
+                if (_fileManager == null) return null;
+                return _fileManager.GetAllAbsoluteDirectories(); 
+            }
         }
 
         private void OpenGithubRepos() => Process.Start(new ProcessStartInfo("https://github.com/Wardergrip/VortexLocker"));

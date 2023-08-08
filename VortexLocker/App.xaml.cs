@@ -34,7 +34,7 @@ namespace VortexLocker
             {
                 // Would be nice if this path is the previously loaded path.
                 // Currently it's the folder of the .exe
-                FileArg = AppDomain.CurrentDomain.BaseDirectory;
+                FileArg = null;
             }
         }
     }
