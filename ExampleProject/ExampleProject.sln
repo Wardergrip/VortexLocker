@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D36FEC5-7BF8-4A70-B5CA-1ECACD8A68A2}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\Lorem.cpp = Scripts\Lorem.cpp
+		Scripts\Lorem.h = Scripts\Lorem.h
+		Models\RaccoonTexture.png = Models\RaccoonTexture.png
+		Models\THERACCOONEXPORT.fbx = Models\THERACCOONEXPORT.fbx
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F51CF5DD-E197-4918-BFF5-956A8B1A3841}
+	EndGlobalSection
+EndGlobal

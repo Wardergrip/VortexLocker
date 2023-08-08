@@ -1,0 +1,17 @@
+{
+    "menu":
+    {
+        "up":"W",
+        "down":"S",
+        "left":"A",
+        "right":"D"
+    },
+    "game":
+    {
+        "up":"W",
+        "down":"S",
+        "left":"A",
+        "right":"D",
+        "attack":"SPACE"
+    }
+}
