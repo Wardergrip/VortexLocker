@@ -5,6 +5,7 @@ VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D36FEC5-7BF8-4A70-B5CA-1ECACD8A68A2}"
 	ProjectSection(SolutionItems) = preProject
+		Settings\controls.json = Settings\controls.json
 		Scripts\Lorem.cpp = Scripts\Lorem.cpp
 		Scripts\Lorem.h = Scripts\Lorem.h
 		Models\RaccoonTexture.png = Models\RaccoonTexture.png
