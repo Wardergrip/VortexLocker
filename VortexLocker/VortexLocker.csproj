@@ -2,9 +2,14 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\VortexIcon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\VortexIcon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Model\" />
