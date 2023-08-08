@@ -7,7 +7,7 @@ using VortexLocker.View;
 
 namespace VortexLocker.ViewModel
 {
-    public class MainViewModel : ObservableObject
+    public class MainVM : ObservableObject
     {
         // This needs to be stored in a file and be configured from within.
         private FileManager _fileManager;
@@ -16,7 +16,7 @@ namespace VortexLocker.ViewModel
         public OverviewPage OverviewPage { get; private set; } = new OverviewPage();
         public string WindowTitle { get; private set; }
 
-        public MainViewModel()
+        public MainVM()
         {
             WindowTitle = $"VortexLocker v0.1 | User: {GitUsername}";
             OpenGithubReposCommand = new RelayCommand(OpenGithubRepos);

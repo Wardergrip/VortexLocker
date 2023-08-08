@@ -10,7 +10,7 @@
         Background="#121212" Foreground="White"
         >
     <Window.DataContext>
-        <vm:MainViewModel/>
+        <vm:MainVM/>
     </Window.DataContext>
     <Grid>
         <TabControl Background="#121212" Foreground="White" >
