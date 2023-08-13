@@ -17,10 +17,20 @@
             <RowDefinition/>
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
-        <StackPanel>
-            <Label Foreground="White">This is the overview</Label>
-            <Button Command="{Binding TestButtonCommand}" Content="Add log"/>
-        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Button Content="TestButton" Command="{Binding TestButtonCommand}"/>
+            </StackPanel>
+            <ListBox Grid.Column="2" ItemsSource="{Binding GroupsDisplay}" 
+                     Foreground="White" Background="#121212"
+                     SelectedItem="{Binding SelectedGroupItem}"/>
+
+        </Grid>
         <terminal:Terminal x:Name="LoggingTerminal" Grid.Row="1"
            Background="#121212" Foreground="White" BorderBrush="DarkGray"
 		   Margin="5"
