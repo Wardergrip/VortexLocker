@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:terminal="clr-namespace:Simple.Wpf.Terminal;assembly=Simple.Wpf.Terminal"
       xmlns:local="clr-namespace:VortexLocker.View"
       xmlns:vm="clr-namespace:VortexLocker.ViewModel"
       mc:Ignorable="d" 
@@ -12,6 +13,19 @@
         <vm:OverviewVM/>
     </Page.DataContext>
     <Grid>
-        <Label Foreground="White">This is the overview</Label>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Label Foreground="White">This is the overview</Label>
+            <Button Command="{Binding TestButtonCommand}" Content="Add log"/>
+        </StackPanel>
+        <terminal:Terminal x:Name="LoggingTerminal" Grid.Row="1"
+           Background="#121212" Foreground="White" BorderBrush="DarkGray"
+		   Margin="5"
+		   IsReadOnly="True"
+		   VerticalScrollBarVisibility="Visible"
+		   ItemsSource="{Binding Path=TerminalEntries, Mode=OneWay}"/>
     </Grid>
 </Page>
