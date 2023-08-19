@@ -45,10 +45,14 @@ namespace VortexLocker.ViewModel
             if (!initLockLogger) return;
             LockLogger.Init(filePath);
         }
-        
+        private string _gitUsername;
         public string GitUsername 
         { 
-            get { return CmdHelper.GetGitUsername(); } 
+            get 
+            { 
+                _gitUsername ??= CmdHelper.GetGitUsername();
+                return _gitUsername; 
+            } 
         }
 
         public List<string> Directories

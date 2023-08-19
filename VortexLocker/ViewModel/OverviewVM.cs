@@ -15,10 +15,15 @@ namespace VortexLocker.ViewModel
     {
         private OverviewPage _page;
         private readonly Grouper _grouper = new();
+
+        #region RelayCommands
         public RelayCommand TestButtonCommand { get; set; }
         public RelayCommand LockUnlockButtonCommand {get; set; }
         public RelayCommand OpenFileExplorerCommand {get; set; }
         public RelayCommand MoveToGroupCommand { get; set; }
+        public RelayCommand CommitVortexCommand { get; set; }
+        #endregion
+
         public static ObservableCollection<string> TerminalEntries { get; private set; }
         public ObservableCollection<string> GroupsDisplay { get; private set; }
         public string SelectedGroupItem { get; set; }
@@ -26,6 +31,7 @@ namespace VortexLocker.ViewModel
         public TreeViewItem SelectedTreeViewItem { get { return TreeView?.SelectedItem as TreeViewItem; } }
         public string SelectedTreeViewItemLockOwnership { get; private set; }
         public string LockUnlockButtonText { get; set; } = "Lock";
+        public bool IsLockAvailable { get; set; } = false;
 
         public OverviewVM() 
         { 
@@ -41,10 +47,12 @@ namespace VortexLocker.ViewModel
             LockUnlockButtonCommand = new RelayCommand(LockUnlockButton);
             OpenFileExplorerCommand = new RelayCommand(OpenFileExplorer);
             MoveToGroupCommand = new RelayCommand(MoveToGroup);
+            CommitVortexCommand = new RelayCommand(CommitVortex);
             TerminalEntries = new();
             LogOnTerminal("TERMINAL LOG");
             LogOnTerminal("============");
             LogOnTerminal("");
+            LogOnTerminal($"git username: {MainVM.Instance.GitUsername}");
 
             GroupsDisplay = new()
             {
@@ -74,7 +82,21 @@ namespace VortexLocker.ViewModel
         }
         private void LockUnlockButton()
         {
-            LogOnTerminal($"LockUnlockButton called");
+            var tvi = TreeView.SelectedItem as TreeViewItem;
+            LogOnTerminal($"LockUnlockButton called on {tvi.Header}, Assume is folder: {tvi.HasItems}");
+            if (tvi.HasItems)
+            {
+                LogOnTerminal($"LockUnlockButton currently does not support folder locking");
+                return;
+            }
+            if (LockUnlockButtonText == "Lock")
+            {
+                LockLogger.RegisterFileToLock(GetFullPath(tvi), MainVM.Instance.GitUsername);
+            }
+            else
+            {
+                LockLogger.RegisterFileToUnlock(GetFullPath(tvi), MainVM.Instance.GitUsername);
+            }
         }
         private void OpenFileExplorer()
         {
@@ -87,52 +109,64 @@ namespace VortexLocker.ViewModel
         {
             LogOnTerminal($"MoveToGroup called");
         }
+        private void CommitVortex()
+        {
+            LogOnTerminal($"WIP");
+            //LogOnTerminal($"Saving LockLogs to: {App.FileArg}");
+            //var fileContents = LockLogger.GetFileContents();
+            //MainVM.Instance.FileManager.LockAll();
+            //foreach (var kvp in fileContents ) 
+            //{
+            //    if (kvp.Key == MainVM.Instance.GitUsername)
+            //    {
+            //        foreach (var file in kvp.Value)
+            //        {
+            //            FileManager.UnlockFile(file);
+            //        }
+            //        break;
+            //    }
+            //}
+            //LockLogger.SaveToFile();
+        }
         #endregion
 
         private void TreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
         {
             OnPropertyChanged(nameof(SelectedTreeViewItem));
-            UpdateLockOwnerShip();
-            OnPropertyChanged(nameof(SelectedTreeViewItemLockOwnership));
+            UpdateLockOwnerShipText();
+            UpdateLockUnlockButtonText();
         }
 
-        private void UpdateLockOwnerShip()
+        #region UpdateView
+        private void UpdateLockUnlockButtonText()
+        {
+            if (SelectedTreeViewItemLockOwnership == "Noone")
+            {
+                LockUnlockButtonText = "Lock";
+                IsLockAvailable = true;
+            }
+            else if (SelectedTreeViewItemLockOwnership == MainVM.Instance.GitUsername)
+            {
+                LockUnlockButtonText = "Unlock";
+                IsLockAvailable = true;
+            }
+            else // locked by someone else
+            {
+                IsLockAvailable = false;
+            }
+
+            OnPropertyChanged(nameof(LockUnlockButtonText));
+            OnPropertyChanged(nameof(IsLockAvailable));
+        }
+
+        private void UpdateLockOwnerShipText()
         {
             string path = GetFullPath(SelectedTreeViewItem);
             path = FileManager.GetRelativePath(Directory.GetParent(MainVM.Instance.FileManager.RootDirectory).FullName, path);
             string username = LockLogger.GetUsernameByPath(path);
             SelectedTreeViewItemLockOwnership = username ?? "Noone"; // ?? takes the first thing only if it isn't null
-        }
 
-        private string GetFullPath(TreeViewItem treeViewItem)
-        {
-            // Start from the child path. The rest of the path will be pushed as we go along
-            List<string> parsedReversedPath = new()
-            {
-                treeViewItem.Header as string
-            };
-            TreeViewItem parent = SelectedTreeViewItem.Parent as TreeViewItem;
-            if (parent != null)
-            {
-                do
-                {
-                    parsedReversedPath.Add(parent.Header as string);
-                    parent = parent.Parent as TreeViewItem;
-                } while (parent != null);
-            }
-            StringBuilder sb = new();
-            // Reverse so that the last element is the most specific file or directory
-            parsedReversedPath.Reverse();
-            // Build the absolute path
-            for (int i = 0; i < parsedReversedPath.Count; ++i)
-            {
-                if (i != 0)
-                {
-                    sb.Append('\\');
-                }
-                sb.Append(parsedReversedPath[i]);
-            }
-            return sb.ToString();
+            OnPropertyChanged(nameof(SelectedTreeViewItemLockOwnership));
         }
 
         private void UpdateGroupsDisplay()
@@ -172,6 +206,38 @@ namespace VortexLocker.ViewModel
                 };
                 parentItem.Items.Add(fileItem);
             }
+        }
+        #endregion
+
+        private string GetFullPath(TreeViewItem treeViewItem)
+        {
+            // Start from the child path. The rest of the path will be pushed as we go along
+            List<string> parsedReversedPath = new()
+            {
+                treeViewItem.Header as string
+            };
+            TreeViewItem parent = SelectedTreeViewItem.Parent as TreeViewItem;
+            if (parent != null)
+            {
+                do
+                {
+                    parsedReversedPath.Add(parent.Header as string);
+                    parent = parent.Parent as TreeViewItem;
+                } while (parent != null);
+            }
+            StringBuilder sb = new();
+            // Reverse so that the last element is the most specific file or directory
+            parsedReversedPath.Reverse();
+            // Build the absolute path
+            for (int i = 0; i < parsedReversedPath.Count; ++i)
+            {
+                if (i != 0)
+                {
+                    sb.Append('\\');
+                }
+                sb.Append(parsedReversedPath[i]);
+            }
+            return sb.ToString();
         }
 
         #region Terminal
