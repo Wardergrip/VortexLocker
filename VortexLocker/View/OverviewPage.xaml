@@ -23,7 +23,14 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
+            <TreeView Name="treeView" Background="#121212">
+                <TreeView.Resources>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="Foreground" Value="White"/>
+                    </Style>
+                </TreeView.Resources>
+            </TreeView>
+            <StackPanel Grid.Column="1">
                 <Button Content="TestButton" Command="{Binding TestButtonCommand}"/>
             </StackPanel>
             <ListBox Grid.Column="2" ItemsSource="{Binding GroupsDisplay}" 

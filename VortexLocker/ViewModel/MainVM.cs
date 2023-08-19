@@ -9,10 +9,13 @@ namespace VortexLocker.ViewModel
 {
     public class MainVM : ObservableObject
     {
+        public static MainVM Instance { get; private set; }
+
         private FileManager _fileManager;
+        public FileManager FileManager { get { return _fileManager; } }
 
         public RelayCommand OpenGithubReposCommand { get; private set; }
-        public OverviewPage OverviewPage { get; private set; } = new OverviewPage();
+        public OverviewPage OverviewPage { get; private set; }
         public string WindowTitle { get; private set; }
 
         public MainVM()
@@ -24,9 +27,19 @@ namespace VortexLocker.ViewModel
             {
                 Init(App.FileArg);
             }
-        }
 
-        public void Init(string filePath, bool initLockLogger = true)
+            if (Instance != null)
+            {
+                throw new System.Exception("Multiple MainVMs");
+            }
+            else
+            {
+                Instance = this;
+            }
+
+            OverviewPage = new();
+        }
+            public void Init(string filePath, bool initLockLogger = true)
         {
             _fileManager = new FileManager(filePath);
             if (!initLockLogger) return;

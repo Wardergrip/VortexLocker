@@ -76,12 +76,12 @@ namespace VortexLocker.Utils
             GetAllFiles().ForEach(path => UnlockFile(path));
         }
 
-        public void LockFile(string path)
+        public static void LockFile(string path)
         {
             File.SetAttributes(path, FileAttributes.ReadOnly);
         }
 
-        public void UnlockFile(string path)
+        public static void UnlockFile(string path)
         {
             File.SetAttributes(path, File.GetAttributes(path) & ~FileAttributes.ReadOnly);
         }
