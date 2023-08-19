@@ -16,6 +16,7 @@ namespace VortexLocker.Utils
 
         public static string GetRelativePath(string basePath, string absolutePath)
         {
+#if USE_NORMAL_RELATIVEPATHING
             // Example:
             // string basePath = @"C:\MyProjects\";
             // string absolutePath = @"C:\MyProjects\Subfolder\file.txt";
@@ -24,6 +25,19 @@ namespace VortexLocker.Utils
             Uri absoluteUri = new Uri(absolutePath);
 
             return Uri.UnescapeDataString(baseUri.MakeRelativeUri(absoluteUri).ToString());
+#else
+            Uri baseUri = new Uri(basePath);
+            Uri absoluteUri = new Uri(absolutePath);
+
+            // Remove the common base path from the absolute path
+            string relativePath = Uri.UnescapeDataString(absoluteUri.AbsolutePath.Replace(baseUri.AbsolutePath, ""));
+
+            // Trim any leading directory separator characters
+            char[] directorySeparatorChars = { '\\', '/' };
+            relativePath = relativePath.TrimStart(directorySeparatorChars);
+
+            return relativePath;
+#endif
         }
 
         public List<string> GetAllAbsoluteDirectories()

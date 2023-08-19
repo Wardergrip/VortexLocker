@@ -7,19 +7,21 @@ using System.Collections.Generic;
 using VortexLocker.Utils;
 using System.Windows.Controls;
 using VortexLocker.View;
-using System.Windows.Shapes;
+using System.Text;
 
 namespace VortexLocker.ViewModel
 {
     public class OverviewVM : ObservableObject
     {
-        private Grouper _grouper = new();
+        private OverviewPage _page;
+        private readonly Grouper _grouper = new();
         public RelayCommand TestButtonCommand { get; set; }
         public static ObservableCollection<string> TerminalEntries { get; private set; }
         public ObservableCollection<string> GroupsDisplay { get; private set; }
         public string SelectedGroupItem { get; set; }
-        public TreeView TreeView { get { return _page.treeView; } }
-        private OverviewPage _page;
+        public TreeView TreeView { get { return _page?.treeView; } }
+        public TreeViewItem SelectedTreeViewItem { get { return TreeView?.SelectedItem as TreeViewItem; } }
+        public string SelectedTreeViewItemLockOwnership { get; private set; }
 
         public OverviewVM() 
         { 
@@ -54,6 +56,54 @@ namespace VortexLocker.ViewModel
             };
             TreeView.Items.Add(rootItem);
             UpdateTreeView(rootItem, path);
+
+            TreeView.SelectedItemChanged += TreeView_SelectedItemChanged;
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        {
+            OnPropertyChanged(nameof(SelectedTreeViewItem));
+            UpdateLockOwnerShip();
+            OnPropertyChanged(nameof(SelectedTreeViewItemLockOwnership));
+        }
+
+        private void UpdateLockOwnerShip()
+        {
+            string path = GetFullPath(SelectedTreeViewItem);
+            path = FileManager.GetRelativePath(Directory.GetParent(MainVM.Instance.FileManager.RootDirectory).FullName, path);
+            string username = LockLogger.GetUsernameByPath(path);
+            SelectedTreeViewItemLockOwnership = username ?? "Noone"; // ?? takes the first thing only if it isn't null
+        }
+
+        private string GetFullPath(TreeViewItem treeViewItem)
+        {
+            // Start from the child path. The rest of the path will be pushed as we go along
+            List<string> parsedReversedPath = new()
+            {
+                treeViewItem.Header as string
+            };
+            TreeViewItem parent = SelectedTreeViewItem.Parent as TreeViewItem;
+            if (parent != null)
+            {
+                do
+                {
+                    parsedReversedPath.Add(parent.Header as string);
+                    parent = parent.Parent as TreeViewItem;
+                } while (parent != null);
+            }
+            StringBuilder sb = new();
+            // Reverse so that the last element is the most specific file or directory
+            parsedReversedPath.Reverse();
+            // Build the absolute path
+            for (int i = 0; i < parsedReversedPath.Count; ++i)
+            {
+                if (i != 0)
+                {
+                    sb.Append('\\');
+                }
+                sb.Append(parsedReversedPath[i]);
+            }
+            return sb.ToString();
         }
 
         private void TestButton()
@@ -80,8 +130,10 @@ namespace VortexLocker.ViewModel
             string[] subDirectories = Directory.GetDirectories(path);
             foreach (string subDir in subDirectories)
             {
-                var subDirItem = new TreeViewItem();
-                subDirItem.Header = new DirectoryInfo(subDir).Name;
+                var subDirItem = new TreeViewItem
+                {
+                    Header = new DirectoryInfo(subDir).Name
+                };
                 parentItem.Items.Add(subDirItem);
 
                 UpdateTreeView(subDirItem, subDir);
@@ -90,8 +142,10 @@ namespace VortexLocker.ViewModel
             string[] files = Directory.GetFiles(path);
             foreach (string file in files)
             {
-                var fileItem = new TreeViewItem();
-                fileItem.Header = new FileInfo(file).Name;
+                var fileItem = new TreeViewItem
+                {
+                    Header = new FileInfo(file).Name
+                };
                 parentItem.Items.Add(fileItem);
             }
         }

@@ -31,6 +31,14 @@
                 </TreeView.Resources>
             </TreeView>
             <StackPanel Grid.Column="1">
+                <TextBlock Foreground="White">
+                    <TextBlock>File:</TextBlock>
+                    <TextBlock Text="{Binding SelectedTreeViewItem.Header,FallbackValue=None}"/>
+                </TextBlock>
+                <TextBlock Foreground="White">
+                    <TextBlock>Locked by:</TextBlock>
+                    <TextBlock Text="{Binding SelectedTreeViewItemLockOwnership,FallbackValue=Noone}"/>
+                </TextBlock>
                 <Button Content="TestButton" Command="{Binding TestButtonCommand}"/>
             </StackPanel>
             <ListBox Grid.Column="2" ItemsSource="{Binding GroupsDisplay}" 
