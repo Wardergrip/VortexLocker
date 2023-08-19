@@ -16,12 +16,16 @@ namespace VortexLocker.ViewModel
         private OverviewPage _page;
         private readonly Grouper _grouper = new();
         public RelayCommand TestButtonCommand { get; set; }
+        public RelayCommand LockUnlockButtonCommand {get; set; }
+        public RelayCommand OpenFileExplorerCommand {get; set; }
+        public RelayCommand MoveToGroupCommand { get; set; }
         public static ObservableCollection<string> TerminalEntries { get; private set; }
         public ObservableCollection<string> GroupsDisplay { get; private set; }
         public string SelectedGroupItem { get; set; }
         public TreeView TreeView { get { return _page?.treeView; } }
         public TreeViewItem SelectedTreeViewItem { get { return TreeView?.SelectedItem as TreeViewItem; } }
         public string SelectedTreeViewItemLockOwnership { get; private set; }
+        public string LockUnlockButtonText { get; set; } = "Lock";
 
         public OverviewVM() 
         { 
@@ -34,6 +38,9 @@ namespace VortexLocker.ViewModel
         {
             _page = overviewPage;
             TestButtonCommand = new RelayCommand(TestButton);
+            LockUnlockButtonCommand = new RelayCommand(LockUnlockButton);
+            OpenFileExplorerCommand = new RelayCommand(OpenFileExplorer);
+            MoveToGroupCommand = new RelayCommand(MoveToGroup);
             TerminalEntries = new();
             LogOnTerminal("TERMINAL LOG");
             LogOnTerminal("============");
@@ -59,6 +66,28 @@ namespace VortexLocker.ViewModel
 
             TreeView.SelectedItemChanged += TreeView_SelectedItemChanged;
         }
+
+        #region Buttons
+        private void TestButton()
+        {
+            LogOnTerminal($"{TreeView.SelectedItem}");
+        }
+        private void LockUnlockButton()
+        {
+            LogOnTerminal($"LockUnlockButton called");
+        }
+        private void OpenFileExplorer()
+        {
+            var path = GetFullPath(SelectedTreeViewItem);
+            path = Directory.GetParent(path).FullName;
+            LogOnTerminal($"OpenFileExplorer: {path}");
+            System.Diagnostics.Process.Start("explorer.exe", path);
+        }
+        private void MoveToGroup()
+        {
+            LogOnTerminal($"MoveToGroup called");
+        }
+        #endregion
 
         private void TreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
         {
@@ -104,11 +133,6 @@ namespace VortexLocker.ViewModel
                 sb.Append(parsedReversedPath[i]);
             }
             return sb.ToString();
-        }
-
-        private void TestButton()
-        {
-            LogOnTerminal($"{TreeView.SelectedItem}");
         }
 
         private void UpdateGroupsDisplay()

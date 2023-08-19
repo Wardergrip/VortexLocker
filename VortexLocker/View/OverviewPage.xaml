@@ -40,6 +40,21 @@
                     <TextBlock Text="{Binding SelectedTreeViewItemLockOwnership,FallbackValue=Noone}"/>
                 </TextBlock>
                 <Button Content="TestButton" Command="{Binding TestButtonCommand}"/>
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Column="0" Grid.Row="0" Content="{Binding LockUnlockButtonText}" Command="{Binding LockUnlockButtonCommand}"/>
+                    <Button Grid.Column="1" Grid.Row="0" Content="Open in file explorer" Command="{Binding OpenFileExplorerCommand}"/>
+                    <Button Grid.Column="2" Grid.Row="0" Content="Move to group" Command="{Binding MoveToGroupCommand}"/>
+                </Grid>
             </StackPanel>
             <ListBox Grid.Column="2" ItemsSource="{Binding GroupsDisplay}" 
                      Foreground="White" Background="#121212"
