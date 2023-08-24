@@ -49,6 +49,7 @@ namespace VortexLocker.ViewModel
             OpenFileExplorerCommand = new RelayCommand(OpenFileExplorer);
             MoveToGroupCommand = new RelayCommand(MoveToGroup);
             CommitVortexCommand = new RelayCommand(CommitVortex);
+            CommitGitCommand = new RelayCommand(CommitGit);
             TerminalEntries = new();
             LogOnTerminal("TERMINAL LOG");
             LogOnTerminal("============");
@@ -127,6 +128,15 @@ namespace VortexLocker.ViewModel
                 }
             }
             LockLogger.SaveToFile();
+        }
+        private void CommitGit()
+        {
+            CmdHelper.Stagechange(App.FileArg);
+            var pch = LockLogger.PathsChanged;
+            List<string> pathsChanged = new();
+            pch.ForEach(x => { pathsChanged.Add($"{(x.Item2 ? 'L' : 'U')}|{x.Item1}"); });
+            pch.Clear();
+            CmdHelper.LockCommit(pathsChanged);
         }
         #endregion
 

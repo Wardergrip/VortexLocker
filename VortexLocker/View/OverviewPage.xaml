@@ -55,6 +55,7 @@
                     <Button Grid.Column="1" Grid.Row="0" Content="Open in file explorer" Command="{Binding OpenFileExplorerCommand}"/>
                     <Button Grid.Column="2" Grid.Row="0" Content="Move to group" Command="{Binding MoveToGroupCommand}" IsEnabled="False"/>
                     <Button Grid.Column="1" Grid.Row="1" Content="Commit vortex" Command="{Binding CommitVortexCommand}"/>
+                    <Button Grid.Column="2" Grid.Row="1" Content="Commit Git" Command="{Binding CommitGitCommand}"/>
                 </Grid>
             </StackPanel>
             <ListBox Grid.Column="2" ItemsSource="{Binding GroupsDisplay}" 

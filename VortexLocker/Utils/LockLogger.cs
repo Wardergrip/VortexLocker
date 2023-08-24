@@ -9,6 +9,7 @@ namespace VortexLocker.Utils
         private static string FilePath { get; set; }
 
         private static Dictionary<string, List<string>> FileContents { get; set; }
+        public static List<Tuple<string, bool>> PathsChanged { get; private set; } = new();
 
         public static void Init(string filepath)
         {
@@ -36,6 +37,7 @@ namespace VortexLocker.Utils
                 fileContents.Add(username, new List<string>());
             }
 
+            PathsChanged.Add(new(pathToLock, true));
             fileContents[username].Add(pathToLock);
             return true;
         }
@@ -48,6 +50,7 @@ namespace VortexLocker.Utils
             {
                 return false;
             }
+            PathsChanged.Add(new(pathToUnlock, false));
             return fileContents[username].Remove(pathToUnlock);
         }
 
