@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using VortexLocker.Utils;
 
 namespace VortexLocker
 {
@@ -36,6 +37,7 @@ namespace VortexLocker
                 // Currently it's the folder of the .exe
                 FileArg = @"..\..\..\..\ExampleProject\ExampleProject.vortex";
             }
+            FileManager.UnlockFile(FileArg);
         }
     }
 }

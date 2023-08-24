@@ -22,6 +22,7 @@ namespace VortexLocker.ViewModel
         public RelayCommand OpenFileExplorerCommand {get; set; }
         public RelayCommand MoveToGroupCommand { get; set; }
         public RelayCommand CommitVortexCommand { get; set; }
+        public RelayCommand CommitGitCommand { get; set; }
         #endregion
 
         public static ObservableCollection<string> TerminalEntries { get; private set; }
@@ -91,11 +92,11 @@ namespace VortexLocker.ViewModel
             }
             if (LockUnlockButtonText == "Lock")
             {
-                LockLogger.RegisterFileToLock(GetFullPath(tvi), MainVM.Instance.GitUsername);
+                LockLogger.RegisterFileToLock(FileManager.GetRelativePath(Directory.GetParent(App.FileArg).FullName, GetFullPath(tvi)), MainVM.Instance.GitUsername);
             }
             else
             {
-                LockLogger.RegisterFileToUnlock(GetFullPath(tvi), MainVM.Instance.GitUsername);
+                LockLogger.RegisterFileToUnlock(FileManager.GetRelativePath(Directory.GetParent(App.FileArg).FullName, GetFullPath(tvi)), MainVM.Instance.GitUsername);
             }
         }
         private void OpenFileExplorer()
@@ -111,22 +112,21 @@ namespace VortexLocker.ViewModel
         }
         private void CommitVortex()
         {
-            LogOnTerminal($"WIP");
-            //LogOnTerminal($"Saving LockLogs to: {App.FileArg}");
-            //var fileContents = LockLogger.GetFileContents();
-            //MainVM.Instance.FileManager.LockAll();
-            //foreach (var kvp in fileContents ) 
-            //{
-            //    if (kvp.Key == MainVM.Instance.GitUsername)
-            //    {
-            //        foreach (var file in kvp.Value)
-            //        {
-            //            FileManager.UnlockFile(file);
-            //        }
-            //        break;
-            //    }
-            //}
-            //LockLogger.SaveToFile();
+            LogOnTerminal($"Saving LockLogs to: {App.FileArg}");
+            var fileContents = LockLogger.GetFileContents();
+            MainVM.Instance.FileManager.LockAll();
+            foreach (var kvp in fileContents)
+            {
+                if (kvp.Key == MainVM.Instance.GitUsername)
+                {
+                    foreach (var file in kvp.Value)
+                    {
+                        FileManager.UnlockFile($"{Directory.GetParent(App.FileArg)}/{file}");
+                    }
+                    break;
+                }
+            }
+            LockLogger.SaveToFile();
         }
         #endregion
 

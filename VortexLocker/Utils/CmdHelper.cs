@@ -31,7 +31,7 @@ namespace VortexLocker.Utils
 
         public static string GetGitUsername()
         {
-            return Run("git", "config user.name");
+            return Run("git", "config user.name").TrimEnd('\n');
         }
 
         public static string LockCommit(List<string> filesToLock, bool mentionFilesInCommitDesc = true)

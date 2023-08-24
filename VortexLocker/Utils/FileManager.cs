@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Windows.Media.Animation;
 
 namespace VortexLocker.Utils
 {
@@ -42,10 +43,13 @@ namespace VortexLocker.Utils
 
         public List<string> GetAllAbsoluteDirectories()
         {
-            List<string> directories = new List<string>();
-            directories.Add(RootDirectory);
+            var rootDirParent = Directory.GetParent(RootDirectory).FullName;
+            List<string> directories = new()
+            { 
+                rootDirParent 
+            };
             // https://www.tutorialspoint.com/how-to-get-all-the-directories-and-sub-directories-inside-a-path-in-chash#:~:text=To%20get%20the%20directories%20C%23,directory%2C%20and%20optionally%20searches%20subdirectories.
-            directories.AddRange(Directory.GetDirectories(RootDirectory, "*", SearchOption.AllDirectories));
+            directories.AddRange(Directory.GetDirectories(rootDirParent, "*", SearchOption.AllDirectories));
 
             return directories;
         }
@@ -92,6 +96,7 @@ namespace VortexLocker.Utils
 
         public static void LockFile(string path)
         {
+            if (path.EndsWith(App.FileExtension)) return;
             File.SetAttributes(path, FileAttributes.ReadOnly);
         }
 
