@@ -131,12 +131,12 @@ namespace VortexLocker.ViewModel
         }
         private void CommitGit()
         {
-            CmdHelper.Stagechange(App.FileArg);
+            LogOnTerminal(CmdHelper.Stagechange(App.FileArg));
             var pch = LockLogger.PathsChanged;
             List<string> pathsChanged = new();
             pch.ForEach(x => { pathsChanged.Add($"{(x.Item2 ? 'L' : 'U')}|{x.Item1}"); });
             pch.Clear();
-            CmdHelper.LockCommit(pathsChanged);
+            LogOnTerminal(CmdHelper.LockCommit(pathsChanged));
         }
         #endregion
 
