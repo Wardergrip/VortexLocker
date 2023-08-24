@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace VortexLocker.Utils
 {
     public static class CmdHelper
     {
-        public static string Run(string command, string commandParameters = "")
+        public static string Run(string command, string commandParameters = "", string workingDir = null)
         {
             // https://stackoverflow.com/questions/206323/how-to-execute-command-line-in-c-get-std-out-results
             //Create process
@@ -19,7 +20,7 @@ namespace VortexLocker.Utils
             //Set output of program to be written to process output stream
             pProcess.StartInfo.RedirectStandardOutput = true;
             //Optional
-            //pProcess.StartInfo.WorkingDirectory = workingDir;
+            if (workingDir != null) pProcess.StartInfo.WorkingDirectory = workingDir;
             //Start the process
             pProcess.Start();
             //Get program output
@@ -46,7 +47,7 @@ namespace VortexLocker.Utils
                     sb.Append("\n");
                 }
             }
-            return Run("git", $"commit -m [VORTEX] Locking files -m {sb.ToString()}");
+            return Run("git", $"commit -m \"[VORTEX] Locking files\" -m \"{sb}\"", Directory.GetParent(App.FileArg).FullName);
         }
 
         public static string UnlockCommit(List<string> filesToUnlock, bool mentionFilesInCommitDesc = true)
