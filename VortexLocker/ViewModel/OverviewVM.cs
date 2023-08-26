@@ -8,6 +8,7 @@ using VortexLocker.Utils;
 using System.Windows.Controls;
 using VortexLocker.View;
 using System.Text;
+using System.Windows;
 
 namespace VortexLocker.ViewModel
 {
@@ -23,6 +24,7 @@ namespace VortexLocker.ViewModel
         public RelayCommand MoveToGroupCommand { get; set; }
         public RelayCommand CommitVortexCommand { get; set; }
         public RelayCommand CommitGitCommand { get; set; }
+        public RelayCommand PushGitCommand { get; set; }
         #endregion
 
         public static ObservableCollection<string> TerminalEntries { get; private set; }
@@ -50,6 +52,7 @@ namespace VortexLocker.ViewModel
             MoveToGroupCommand = new RelayCommand(MoveToGroup);
             CommitVortexCommand = new RelayCommand(CommitVortex);
             CommitGitCommand = new RelayCommand(CommitGit);
+            PushGitCommand = new RelayCommand(PushGit);
             TerminalEntries = new();
             LogOnTerminal("TERMINAL LOG");
             LogOnTerminal("============");
@@ -131,12 +134,29 @@ namespace VortexLocker.ViewModel
         }
         private void CommitGit()
         {
+            var mbResult = MessageBox.Show("Are you sure? Make sure you have fetched and pulled latest changes", "[VORTEXLOCKER] Commit git", MessageBoxButton.YesNo);
+            if (mbResult != MessageBoxResult.Yes)
+            {
+                LogOnTerminal("MessageBox result: No or close");
+                return;
+            }
+            LogOnTerminal("MessageBox result: Yes");
             LogOnTerminal(CmdHelper.Stagechange(App.FileArg));
             var pch = LockLogger.PathsChanged;
             List<string> pathsChanged = new();
             pch.ForEach(x => { pathsChanged.Add($"{(x.Item2 ? 'L' : 'U')}|{x.Item1}"); });
             pch.Clear();
             LogOnTerminal(CmdHelper.LockCommit(pathsChanged));
+        }
+        private void PushGit()
+        {
+            var mbResult = MessageBox.Show("Are you sure you want to push these locks?", "[VORTEXLOCKER] Push git", MessageBoxButton.YesNo);
+            if (mbResult != MessageBoxResult.Yes)
+            {
+                LogOnTerminal("MessageBox result: No or close");
+                return;
+            }
+            CmdHelper.PushCommits();
         }
         #endregion
 
