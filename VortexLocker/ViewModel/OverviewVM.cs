@@ -18,7 +18,6 @@ namespace VortexLocker.ViewModel
         private readonly Grouper _grouper = new();
 
         #region RelayCommands
-        public RelayCommand TestButtonCommand { get; set; }
         public RelayCommand LockUnlockButtonCommand {get; set; }
         public RelayCommand OpenFileExplorerCommand {get; set; }
         public RelayCommand MoveToGroupCommand { get; set; }
@@ -46,7 +45,6 @@ namespace VortexLocker.ViewModel
         public OverviewVM(OverviewPage overviewPage)
         {
             _page = overviewPage;
-            TestButtonCommand = new RelayCommand(TestButton);
             LockUnlockButtonCommand = new RelayCommand(LockUnlockButton);
             OpenFileExplorerCommand = new RelayCommand(OpenFileExplorer);
             MoveToGroupCommand = new RelayCommand(MoveToGroup);
@@ -81,10 +79,6 @@ namespace VortexLocker.ViewModel
         }
 
         #region Buttons
-        private void TestButton()
-        {
-            LogOnTerminal($"{TreeView.SelectedItem}");
-        }
         private void LockUnlockButton()
         {
             var tvi = TreeView.SelectedItem as TreeViewItem;

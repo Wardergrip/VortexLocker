@@ -39,7 +39,6 @@
                     <TextBlock>Locked by:</TextBlock>
                     <TextBlock Text="{Binding SelectedTreeViewItemLockOwnership,FallbackValue=Noone}"/>
                 </TextBlock>
-                <Button Content="TestButton" Command="{Binding TestButtonCommand}"/>
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
