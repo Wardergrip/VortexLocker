@@ -7,7 +7,7 @@ In essence, we are trying to prevent merge conflicts on files where they are har
 File locking is useful for working with multiple people on a project that has binary files that might have to be edited regularly. In some occasions, the order of changes can alter the end result. In this case it can also be handy to have the option to lock files to make sure that the next person works with the latest version.
 File locking is not useful for a project where the big majority of changes are only in code files.
 
-## How does this the VortexLocker file locking system work?
+## How does this VortexLocker file locking system work?
 When initializing the project with VortexLocker, all files will be marked as read only on your local machine and a `.vortex` file will be made in the root of the repository. This file is never read only. This file contains a list of git usernames and which file paths they have currently locked. 
 Through the program you can lock files. You can only lock files if that file is not registered in the `.vortex` file in the root of the repository. 
 Locking the file will write the file path under your username in the `.vortex` file and makes it writable, allowing you to make any changes.
